@@ -1,9 +1,9 @@
 *{
-    margin:5px;
+    margin:0px;
 }
 
 h1,h2{
-    text-align: center;
+    text-align: left;
 }
 
 .btn {
@@ -11,11 +11,28 @@ h1,h2{
     margin: 0 auto;
 }
 
+.btn.btn-lft {
+    margin-left: 0;
+}
+
+.homepage-title h1{
+    text-align: center;
+}
+
+.index-btn button{
+    margin-left: 50px;
+}
+
 #login-box,#register-box{
     border: 2px black solid;
     margin: 1em;
     padding: 1em;
     border-radius: 10px;
+}
+
+.alert{
+    margin-left: 15px;
+    margin-right: 15px;
 }
 
 div.user_homepage.saved_buses{
@@ -42,6 +59,8 @@ div.user_homepage.saved_buses{
     height: 110px;
 }
 
+
+
 .title{
     margin:0;
     font-size: 28px;
@@ -52,12 +71,74 @@ div.user_homepage.saved_buses{
     font-size:18px;
 }
 
-div.user_homepage.saved_buses a{
-    text-align: center;
+#header-box {
+    margin: 0;
+    background-color: #dedede;
+    padding: 10px;
+    height: 140px;
+}
+
+#header-box h1{
+    font-size: 50px;
+}
+
+.header-btn-group button {
+    padding: 10px 24px;
+    margin-right: 20px;
+    cursor: pointer;
+    float: left;
+}
+
+a{
     text-decoration: none;
+    color: white;
+}
+
+a:hover{
+    color: white;
+}
+
+.current_user_info {
+    width: auto;
+}
+
+.current_user_info p{
+    line-height: 0;
+    text-align: right;
+}
+
+
+/* User homepage buttons */
+
+.homepage-btn{
+    border-radius: 20px;
+    padding: 10px;
+    width: 180px;
+    height: 140px;
+    background-color: #9ADDFB;
+    line-height: 0;
+    margin: 0 auto;
+}
+
+.homepage-btn:hover{
+    background-color: #81caed;
+}
+
+.homepage-btn img{
+    width: 70%;
+    transform: translate(0px,-10px);
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.homepage-btn p{
+    padding-top: 10px;
+    text-align: center;
+    font-weight: bold;
     color: black;
 }
 
-div.user_homepage.saved_buses a:hover {
-    background-color: black;
+.display-1{
+    text-align: center;
 }

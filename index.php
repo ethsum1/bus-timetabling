@@ -1,5 +1,11 @@
 <?php
     include_once 'header.php';
+
+    // If user is logged in, redirects to the user's homepage
+    if (isset($_SESSION["user_id"])) {
+      header("location: user-homepage.php");
+      exit();
+    }
 ?>
 
 <div class="homepage-title">
@@ -30,9 +36,6 @@ if (isset($_GET["error"])) {
     echo '<div class="alert alert-success" role="alert">You are logged in!</div>';
   }
 }
-
-
-echo "Current user set as: ".$_SESSION["user_id"]." ".$_SESSION["user_fname"]." ".$_SESSION["user_email"];
 ?>
 <section id="login-section" style="display:block">
   <div id="login-box">
@@ -49,10 +52,12 @@ echo "Current user set as: ".$_SESSION["user_id"]." ".$_SESSION["user_fname"]." 
         <input type="password" name="pwd" class="form-control" id="loginInputPassword">
       </div>
       <!-- Login button -->
-      <button type="submit" name="submit" class="btn btn-primary">Login</button>
+      <button type="submit" name="submit" class="btn btn-primary btn-lft">Login</button>
     </form>
   </div>
+
   <button class="btn btn-secondary" onclick="showDiv('register-section');hideDiv('login-section')">Not got an account?</button>
+
 </section>
 
 <section id="register-section" style="display:none">
@@ -79,16 +84,13 @@ echo "Current user set as: ".$_SESSION["user_id"]." ".$_SESSION["user_fname"]." 
         <label for="registerInputPasswordRepeat" class="form-label">Repeat your password</label>
         <input type="password" name="pwdRepeat" class="form-control" id="registerInputPasswordRepeat">
       </div>
-      <!-- Checkbox for register -->
-      <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="acceptTCs">
-        <label class="form-check-label" for="acceptTCs">Accept T&Cs & Privacy Policy</label>
-      </div>
       <!-- Register button -->
-      <button type="submit" name="submit" class="btn btn-primary">Register</button>
+      <button type="submit" name="submit" class="btn btn-primary btn-lft">Register</button>
     </form>
   </div>
+  
   <button class="btn btn-secondary" onclick="showDiv('login-section');hideDiv('register-section')">Already got an account?</button>
+
 </section>
 <?php
     include_once 'footer.php'

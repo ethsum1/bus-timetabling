@@ -1,7 +1,5 @@
 <?php
     include_once 'header.php';
-    echo "Current user set as: ".$_SESSION["user_id"]." ".$_SESSION["user_fname"]." ".$_SESSION["user_email"];
-
 ?>
 
 <h1 class="my-3 display-1">Welcome 
@@ -10,11 +8,7 @@
 
 
 
-<form action="includes/logout.inc.php" action="post">
-    <button class="btn btn-secondary" name="logout">Logout</button>
-</form>
-
-<h3>Your saved bus services:</h3>
+<!-- <h3>Your saved bus services:</h3>
 <div class="user_homepage saved_buses">
     <a href="#x60">
         <div class="service">
@@ -60,10 +54,16 @@
 
 
 
+</div> -->
+<div class="homepage-btn">
+    <a href="bus-stop-selector.php">
+        <p>Choose a bus stop</p>
+        <img src="media/bus_stop_icon.png">
+    </a>
 </div>
 
-<button class="btn btn-primary" onclick="href('bus-stop-selector.php');">Choose a bus stop</button>
-<button class="btn btn-primary">Choose a bus service</button>
+<!-- <button class="btn btn-primary" onclick="href('bus-stop-selector.php');">Choose a bus stop</button>
+<button class="btn btn-primary">Choose a bus service</button> -->
 
 <?php
     include_once 'footer.php'
