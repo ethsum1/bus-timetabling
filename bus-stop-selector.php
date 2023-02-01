@@ -2,7 +2,7 @@
     include_once 'header.php'
 ?>
 
-<h1>Please enter a postcode to display nearby services</h1>
+<h1>Please enter a postcode to display nearby bus stops</h1>
 
 <?php
 if (isset($_GET["error"])) {
@@ -10,9 +10,14 @@ if (isset($_GET["error"])) {
     echo '<div class="alert alert-danger" role="alert">There was a problem with your postcode entry.</div>';
   }
 }
-if ((isset($_GET["lon"])) && (isset($_GET["lat"]))) {
-$longitude = $_GET["lon"];
-$latitude = $_GET["lat"];
+// if ((isset($_GET["lon"])) && (isset($_GET["lat"]))) {
+// $longitude = $_GET["lon"];
+// $latitude = $_GET["lat"];
+//   echo '<div class="alert alert-success" role="alert">There were successful returned results. Longitude: '.$longitude.'. Latitude: '.$latitude.'.</div>';
+// }
+if ((isset($_COOKIE["longitude"])) && isset($_COOKIE["latitude"])) {
+  $longitude = $_COOKIE["longitude"];
+  $latitude = $_COOKIE["latitude"];
   echo '<div class="alert alert-success" role="alert">There were successful returned results. Longitude: '.$longitude.'. Latitude: '.$latitude.'.</div>';
 }
 ?>
@@ -81,6 +86,7 @@ if ($row_longitude !== 0 && $row_latitude !== 0) {
 
   $closest_stop_id = array_key_first($bus_stops_arr);
   $closest_dist = reset($bus_stops_arr);
+  $closest_dist_formatted = number_format($closest_dist, 2, '.', ',');
   
   $sql = "SELECT * FROM bus_stops WHERE stop_id=".$closest_stop_id.";";
   $result = mysqli_query($conn,$sql);
@@ -89,7 +95,7 @@ if ($row_longitude !== 0 && $row_latitude !== 0) {
     echo "Stop Name: ".$row["name"]."</br>";
       echo "Street: ".$row["street"]."</br>";
       echo "Town: ".$row["town"]."</br>";
-      echo "Distance: ".$closest_dist." km.</br>";
+      echo "Distance: ".$closest_dist_formatted." km.</br>";
   }
 
   echo "<form action='includes/bus-stop-page.inc.php?".$row["atco_code"]."' method='post'>";
@@ -100,27 +106,6 @@ if ($row_longitude !== 0 && $row_latitude !== 0) {
 
   <?php
 }
-
-
-
-// $stmt = mysqli_stmt_init($conn);
-
-//     if (!mysqli_stmt_prepare($stmt, $sql)) {
-//         header("location: ../index.php?error=stmtfailed");
-//         exit();
-//     }
-    
-//     mysqli_stmt_bind_param($stmt, "i", $closest_stop_id);
-//     mysqli_stmt_execute($stmt);
-
-//     $result = mysqli_stmt_get_result($stmt);
-
-//     $row = mysqli_fetch_assoc($result);
-
-//     echo "Stop Name: ".$row["name"]."</br>";
-//     echo "Street: ".$row["street"]."</br>";
-//     echo "Town: ".$row["town"]."</br>";
-//     echo "Distance: ".$closest_dist." metres.</br>";
 
 mysqli_close($conn);
 

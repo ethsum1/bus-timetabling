@@ -6,39 +6,37 @@
         $postcode = str_replace(' ','',$postcode);
 
         // Calls the API using the curl structure
-        $postcode="MK111JL";
         $url = "https://api.postcodes.io/postcodes/".$postcode;
 
-        $curl = curl_init($url);
-        // curl_setopt($curl, CURLOPT_URL, $url);
-        // curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
-		// curl_setopt($curl, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        // curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        $response = curl_exec($curl);
-        curl_close($curl);
+        $response = file_get_contents($url);
 
         // Decodes the JSON object into a PHP array
-        $response1 = "[".$response."]";
-        $dataset = json_decode($response1,true);
-        echo "</br>"."################ ITER 0 #################"."</br>";
-        var_dump($dataset);
-        $dataset2 = "[".$dataset."]";
-        $dataset3 = json_decode($dataset2, true);
-        echo $dataset2;
-        echo "</br>"."################ ITER 0 #################"."</br>";
-        foreach($dataset3 as $elem) {
-            $status = $elem['status'];
-            echo $status;
-            
-            foreach ($elem['result'] as $result){
-                $longitude = $result['longitude'];
-                $latitude = $result['latitude'];
-                $country = $result['country'];
-                $parish = $result['parish'];
+        $response = "[".$response."]";
+        $dataset = json_decode($response,true);
 
-                echo $country." ".$parish." ".$longitude.' ',$latitude;
-            }
+        foreach($dataset as $elem) {
+            // status is a single string, so we can output it using 'echo'
+            $status = $elem['status'];
+            
+            // result is an array of items, so can't just output via 'echo' use 'print_r' to print an array
+            $result_array = $elem['result'];
+
+            // now can reference each of the items in the 'result' array...
+            $longitude = $result_array['longitude'];
+            $latitude = $result_array['latitude'];
+            $country = $result_array['country'];
+            $parish = $result_array['parish'];
+
+            echo $country." ".$parish." ".$longitude.' ',$latitude; echo "\n";         
         }
+
+        setcookie("longitude",$longitude,time()+86400,"/");
+        setcookie("latitude",$latitude,time()+86400,"/");
+
+        header("location: ../bus-stop-selector.php");
+        exit();
+
     }
+
 
 ?>
