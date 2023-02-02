@@ -35,6 +35,11 @@
         setcookie("longitude",$longitude,time()+86400,"/");
         setcookie("latitude",$latitude,time()+86400,"/");
 
+        if ($status != 200) {
+            header("location: ../bus-stop-selector.php?error="."true");
+            exit();
+        }
+
         // Redirects user
         header("location: ../bus-stop-selector.php");
         exit();

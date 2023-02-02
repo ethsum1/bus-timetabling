@@ -77,24 +77,30 @@
         $count = 0;
         $services = $data["ServiceDelivery"]["StopMonitoringDelivery"]["MonitoredStopVisit"];
 
-        echo "<table>";
-        echo "<tr><th>Line Name</th><th>Departure Time</th><th>Direction</th></tr>";
+        if (!empty($services)) {
+            echo "<table>";
+            echo "<tr><th>Line Name</th><th>Departure Time</th><th>Direction</th></tr>";
 
-        foreach ($services as $service) {
-            if ($count >= 5) {
-                break;
+            foreach ($services as $service) {
+                if ($count >= 5) {
+                    break;
+                }
+
+                $line_name = $service["MonitoredVehicleJourney"]["PublishedLineName"];
+                $departure_time = $service["MonitoredVehicleJourney"]["MonitoredCall"]["AimedDepartureTime"];
+                $direction = $service["MonitoredVehicleJourney"]["DirectionName"];
+
+                echo "<tr><td>$line_name</td><td>".formatDateTime($departure_time)."</td><td>$direction</td></tr>";
+
+                $count++;
             }
 
-            $lineName = $service["MonitoredVehicleJourney"]["PublishedLineName"];
-            $departureTime = $service["MonitoredVehicleJourney"]["MonitoredCall"]["AimedDepartureTime"];
-            $direction = $service["MonitoredVehicleJourney"]["DirectionName"];
-
-            echo "<tr><td>$lineName</td><td>".formatDateTime($departureTime)."</td><td>$direction</td></tr>";
-
-            $count++;
+            echo "</table>";
+        } else {
+            echo '<div class="alert alert-danger" role="alert">There were no services found for this bus stop. Please try again with another bus stop.</div>';
         }
 
-        echo "</table>";
+        
 
     }
 

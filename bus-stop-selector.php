@@ -7,8 +7,8 @@
 
 <?php
 if (isset($_GET["error"])) {
-  if ($_GET["error"] == "404") {
-    echo '<div class="alert alert-danger" role="alert">There was a problem with your postcode entry.</div>';
+  if ($_GET["error"] == "true") {
+    echo '<div class="alert alert-danger" role="alert">There was a problem with your postcode entry. Please try again</div>';
   }
 }
 
