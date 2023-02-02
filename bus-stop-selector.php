@@ -2,6 +2,7 @@
     include_once 'header.php'
 ?>
 
+<section class="bus-stop-selector">
 <h1>Please enter a postcode to display nearby bus stops</h1>
 
 <?php
@@ -10,11 +11,7 @@ if (isset($_GET["error"])) {
     echo '<div class="alert alert-danger" role="alert">There was a problem with your postcode entry.</div>';
   }
 }
-// if ((isset($_GET["lon"])) && (isset($_GET["lat"]))) {
-// $longitude = $_GET["lon"];
-// $latitude = $_GET["lat"];
-//   echo '<div class="alert alert-success" role="alert">There were successful returned results. Longitude: '.$longitude.'. Latitude: '.$latitude.'.</div>';
-// }
+
 if ((isset($_COOKIE["longitude"])) && isset($_COOKIE["latitude"])) {
   $longitude = $_COOKIE["longitude"];
   $latitude = $_COOKIE["latitude"];
@@ -93,18 +90,18 @@ if ($row_longitude !== 0 && $row_latitude !== 0) {
   
   while($row = mysqli_fetch_array($result)) {
     echo "Stop Name: ".$row["name"]."</br>";
-      echo "Street: ".$row["street"]."</br>";
-      echo "Town: ".$row["town"]."</br>";
-      echo "Distance: ".$closest_dist_formatted." km.</br>";
+    echo "Street: ".$row["street"]."</br>";
+    echo "Town: ".$row["town"]."</br>";
+    echo "Distance: ".$closest_dist_formatted." km.</br>";
+
+    setcookie("stop_id",$row['stop_id'],time()+86400,'/');
+    setcookie("atco_code",$row['atco_code'],time()+86400,'/');
   }
 
-  echo "<form action='includes/bus-stop-page.inc.php?".$row["atco_code"]."' method='post'>";
-  echo "<button name='search' class='btn btn-success my-2'>See bus stop page</button>";
-  echo "</form>";
+  echo "<a href='bus-stop-page.php'><button name='search' class='btn btn-success my-2'>See bus stop page</button></a>";
 
-  ?>
+  echo "</section>";
 
-  <?php
 }
 
 mysqli_close($conn);

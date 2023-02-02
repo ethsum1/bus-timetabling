@@ -1,41 +1,48 @@
 <?php
 
+    // Checks to see if the form has been submitted
     if (isset($_POST["search"])) {
-        // Gets user entered postcode and removes whitespace
+
+        // Gets the postcode value from the form and removes spaces in the postcode
         $postcode = $_POST["postcode"];
         $postcode = str_replace(' ','',$postcode);
 
-        // Calls the API using the curl structure
+        // Creates the URL to the API endpoint
         $url = "https://api.postcodes.io/postcodes/".$postcode;
 
+        // Recieves response from API
         $response = file_get_contents($url);
 
-        // Decodes the JSON object into a PHP array
+        // Formats response as a valid JSON response and decodes it into an array
         $response = "[".$response."]";
         $dataset = json_decode($response,true);
 
+        // Accesses child values within the array
         foreach($dataset as $elem) {
-            // status is a single string, so we can output it using 'echo'
             $status = $elem['status'];
             
-            // result is an array of items, so can't just output via 'echo' use 'print_r' to print an array
+            // Stores results from the array
             $result_array = $elem['result'];
-
-            // now can reference each of the items in the 'result' array...
             $longitude = $result_array['longitude'];
             $latitude = $result_array['latitude'];
             $country = $result_array['country'];
             $parish = $result_array['parish'];
 
-            echo $country." ".$parish." ".$longitude.' ',$latitude; echo "\n";         
         }
 
+        // Set cookies for longitude and latitude so it can be passed to other pages
+        // Stores cookies for 24 hours
         setcookie("longitude",$longitude,time()+86400,"/");
         setcookie("latitude",$latitude,time()+86400,"/");
 
+        // Redirects user
         header("location: ../bus-stop-selector.php");
         exit();
 
+    }
+    else {
+        header("location: ../bus-stop-selector.php");
+        exit();
     }
 
 
