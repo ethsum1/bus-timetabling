@@ -19,7 +19,7 @@ if ((isset($_COOKIE["longitude"])) && isset($_COOKIE["latitude"])) {
 }
 ?>
 
-<form action="includes/postcode-selector.inc.php" method="post">
+<form action="backend/postcode-selector.php" method="post">
     <input name="postcode" placeholder="Enter a postcode" type="text" class="form-control" label="postcode">
     <button name="search" class="btn btn-secondary my-2">Search</button>
 </form>
@@ -56,7 +56,7 @@ function array_push_assoc($array, $key, $value){
 // Get all records from database, find distance and sort in ascending order of distance between long/lat
 $sql = "SELECT * FROM bus_stops;";
 $bus_stops_arr = array();
-require_once 'includes/dbconfig.inc.php';
+require_once 'backend/dbconfig.php';
 $result = mysqli_query($conn,$sql);
 
 while($row = mysqli_fetch_array($result)) {

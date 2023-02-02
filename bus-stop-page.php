@@ -17,7 +17,7 @@
         }
 
         echo "<h1>".$name."</h1>";
-        echo "<p>".$street." - ".$town."</p>";
+        echo "<p>".$street.", ".$town."</p>";
 
 
         // Bus timetable data
