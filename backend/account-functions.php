@@ -2,40 +2,23 @@
 
 // Checks for empty fields during user registration
 function emptyInputRegister($name, $email, $pwd, $pwdRepeat) {
-    $result = false;
-    if (empty($name) || empty($email) || empty($pwd) || empty($pwdRepeat)) {
-        $result = true;
-    }
-    return $result;
+    return (empty($name) || empty($email) || empty($pwd) || empty($pwdRepeat));
 }
 
 // Checks for empty fields during user login
 function emptyInputLogin($email, $pwd) {
-    $result = false;
-    if (empty($email) || empty($pwd)) {
-        $result = true;
-    }
-    return $result;
+    return (empty($email) || empty($pwd));
 }
 
 // Validates an email address input
 function invalidEmail($email) {
-    $result = false;
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $result = true;
-    }
-    return $result;
+    return (!filter_var($email, FILTER_VALIDATE_EMAIL));
 
 }
 
 // Checks that the password and password repeat fields match
 function pwdMatch($pwd, $pwdRepeat) {
-    $result = false;
-    if ($pwd !== $pwdRepeat) {
-        $result = true;
-    }
-    return $result;
-
+    return ($pwd !== $pwdRepeat);
 }
 
 // Checks if an email already exists in the database
