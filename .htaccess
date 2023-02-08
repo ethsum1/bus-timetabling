@@ -1,0 +1,2 @@
+ErrorDocument 404 http://localhost/bus-timetabling/backend/error.php?error=404
+ErrorDocument 500 http://localhost/bus-timetabling/backend/error.php?error=500

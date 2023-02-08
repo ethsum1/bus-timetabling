@@ -6,13 +6,14 @@ $dbUsername = "root";
 $dbPassword = "";
 $dbName = "bus-timetabling";
 
-// Establishes connection with the database
-$conn = mysqli_connect($serverName, $dbUsername, $dbPassword, $dbName);
-
-// Handles error if connection was unsuccessful
-if (!$conn) {
+try{
+    // Establishes connection with the database
+    $conn = mysqli_connect($serverName, $dbUsername, $dbPassword, $dbName);
+}
+catch(Exception){
+    // Handles error if connection was unsuccessful
+    header('location: error.php?error=500');
     die("Connection failed: " . mysqli_connect_error());
 }
-
 
 ?>
