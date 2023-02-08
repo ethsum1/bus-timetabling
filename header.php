@@ -10,7 +10,13 @@
 <body>
 
 <?php
+
+
 session_start();
+
+echo "Testing purposes:- Name: ".$_SESSION["user_fname"].", Email: ".$_SESSION["user_email"];
+
+
 if (isset($_SESSION['user_id'])) {
 ?>
     
@@ -19,7 +25,7 @@ if (isset($_SESSION['user_id'])) {
 
         <div class="header-btn-group">
             <button class="btn btn-secondary"><a href="user-homepage.php">Your Homepage</a></button>
-            <form action="includes/logout.inc.php" action="post">
+            <form action="backend/logout.php" action="post">
                 <button class="btn btn-secondary" name="logout">Logout</button>
             </form>
         </div>

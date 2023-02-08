@@ -4,7 +4,7 @@
     if(isset($_COOKIE["stop_id"])){
 
         $sql = "SELECT * FROM bus_stops WHERE stop_id=".$_COOKIE['stop_id'].";";
-        require_once 'includes/dbconfig.inc.php';
+        require_once 'backend/dbconfig.php';
         $result = mysqli_query($conn,$sql);
 
         while($row = mysqli_fetch_array($result)) {

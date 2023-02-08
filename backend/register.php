@@ -9,8 +9,8 @@ if (isset($_POST["submit"])) {
     $pwd = $_POST["pwd"];
     $pwdRepeat = $_POST["pwdRepeat"];
 
-    require_once 'dbconfig.inc.php';
-    require_once 'functions.inc.php';
+    require_once 'dbconfig.php';
+    require_once 'account-functions.php';
 
     // Checks for potential errors and sends an error message if there is
     if (emptyInputRegister($name, $email, $pwd, $pwdRepeat) !== false) {
@@ -34,6 +34,7 @@ if (isset($_POST["submit"])) {
     createUser($conn, $name, $email, $pwd);
 
 }
+// If the user accesses the webpage without submitting the form, it redirects them to the register form page
 else {
     header("location: ../index.php");
     exit();

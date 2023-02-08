@@ -8,8 +8,8 @@ if (isset($_POST["submit"])) {
     $pwd = $_POST["pwd"];
 
     // Includes relevant requried files
-    require_once 'dbconfig.inc.php';
-    require_once 'functions.inc.php';
+    require_once 'dbconfig.php';
+    require_once 'account-functions.php';
 
     // Redirects to login page with error message if inputs are empty
     if (emptyInputLogin($email, $pwd) !== false) {

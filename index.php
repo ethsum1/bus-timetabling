@@ -40,7 +40,7 @@ if (isset($_GET["error"])) {
 <section id="login-section" style="display:block">
   <div id="login-box">
     <h2>Login</h2>
-    <form action="includes/login.inc.php" method="post">
+    <form action="backend/login.php" method="post">
       <!-- Email for login -->
       <div class="mb-3">
         <label for="loginInputEmail" class="form-label">Email address</label>
@@ -63,7 +63,7 @@ if (isset($_GET["error"])) {
 <section id="register-section" style="display:none">
   <div id="register-box">
     <h2>Register</h2>
-    <form action="includes/register.inc.php" method="post">
+    <form action="backend/register.php" method="post">
       <!-- First name for register -->
       <div class="mb-3">
         <label for="registerInputName" class="form-label">Name</label>
