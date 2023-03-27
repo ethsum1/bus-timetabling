@@ -14,9 +14,9 @@
 
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 
 // Starts session (account login) on every page
@@ -36,15 +36,15 @@ if (isset($_SESSION['user_id'])) {
             </form>
         </div>
 
-        <!-- Displays current user info (for testing purposes) -->
-        <div class="current_user_info">
+        <!-- Displays current user info (for testing purposes) --->
+        <!-- <div class="current_user_info">
             <p >Current user set:</p>
             <?php
-                echo "<p>User ID: ".$_SESSION["user_id"]."</p>";
-                echo "<p>Name: ".$_SESSION["user_fname"]."</p>";
-                echo "<p>Email: ".$_SESSION["user_email"]."</p>";
+                // echo "<p>User ID: ".$_SESSION["user_id"]."</p>";
+                // echo "<p>Name: ".$_SESSION["user_fname"]."</p>";
+                // echo "<p>Email: ".$_SESSION["user_email"]."</p>";
             ?>
-        </div>
+        </div> -->
     </div>
 
 <?php } ?>
