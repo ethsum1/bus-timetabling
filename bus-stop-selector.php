@@ -176,7 +176,7 @@ function closestStops($arr,$conn,$num = 5) {
   
 
 
-  $api_key = "AIzaSyAH1phNZY7PT6Wt9UhIWqi76NSQz0rSFWU"; 
+  $api_key = "[REDACTED]"; 
 
   $markers = '';
   // Gives marker for user entered postcode in a blue colour. Uses markers parameter
