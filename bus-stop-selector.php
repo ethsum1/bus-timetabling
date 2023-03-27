@@ -2,7 +2,7 @@
     include_once 'header.php'
 ?>
 
-<section class="bus-stop-selector">
+<section class="page-content">
 <h1>Please enter a postcode to display nearby bus stops</h1>
 
 <?php
@@ -15,17 +15,15 @@ if (isset($_GET["error"])) {
 if ((isset($_COOKIE["longitude"])) && isset($_COOKIE["latitude"])) {
   $longitude = $_COOKIE["longitude"];
   $latitude = $_COOKIE["latitude"];
-  echo '<div class="alert alert-success" role="alert">There were successful returned results. Longitude: '.$longitude.'. Latitude: '.$latitude.'.</div>';
+  $postcode = $_COOKIE["postcode"];
+  // echo '<div class="alert alert-success" role="alert">There were successful returned results. Longitude: '.$longitude.'. Latitude: '.$latitude.'.</div>';
 }
-?>
 
-<form action="backend/postcode-selector.php" method="post">
-    <input name="postcode" placeholder="Enter a postcode" type="text" class="form-control" label="postcode">
-    <button name="search" class="btn btn-secondary my-2">Search</button>
-</form>
+echo "<form class='postcode-entry' action='backend/postcode-selector.php' method='post'>";
+echo "<input name='postcode' placeholder='Enter a postcode' type='text' class='form-control' label='postcode'>";
+echo "<button name='search' class='btn btn-secondary my-2'>Search</button>";
+echo "</form>";
 
-
-<?php
 
 // Calculates distance between 2 longitude and latitude positions using Haversine formula
 // Credit: Geeks For Geeks
@@ -89,29 +87,13 @@ if ($row_longitude !== 0 && $row_latitude !== 0) {
   // Sorts the array in ascending order by distance
   asort($bus_stops_arr);
 
-  // Selects the closest distance and its row ID.
-  // $closest_stop_id = array_key_first($bus_stops_arr);
-  closest_stops($bus_stops_arr,$conn);
 
-  // $closest_dist = reset($bus_stops_arr);
-  // $closest_dist_formatted = number_format($closest_dist, 2, '.', ','); // Formats distance to 2dp
-  
-  // $sql = "SELECT * FROM bus_stops WHERE stop_id=".$closest_stop_id.";";
-  // $result = mysqli_query($conn,$sql);
-  
-  // // Gets data for the closest bus stop and displays it
-  // while($row = mysqli_fetch_array($result)) {
-  //   echo "Stop Name: ".$row["name"]."</br>";
-  //   echo "Street: ".$row["street"]."</br>";
-  //   echo "Town: ".$row["town"]."</br>";
-  //   echo "Distance: ".$closest_dist_formatted." km.</br>";
 
-  //   // Cookies are stored so they can be used in the timetable display page
-  //   // Removes the need for a form to be used for a single button
-  //   setcookie("stop_id",$row['stop_id'],time()+86400,'/');
-  //   setcookie("atco_code",$row['atco_code'],time()+86400,'/');
-  // }
-  // echo "<a href='bus-stop-page.php'><button name='search' class='btn btn-success my-2'>See bus stop page</button></a>";
+  if (isset($postcode)) {
+    echo "<p><strong>Displaying the closest bus stops to $postcode.</strong></p>";
+    closestStops($bus_stops_arr,$conn);
+  }  
+  
   echo "</section>";
 }
 
@@ -120,8 +102,23 @@ function formatDist($dist){
   // return number_format($dist*1000, 0, '.',',')."m";
 }
 
+function displayHeart($stop_id,$conn){
+  $sql = "SELECT * FROM saved_stops WHERE account_id=".$_SESSION["user_id"];
+  $result = mysqli_query($conn,$sql);
+
+  // Loops through the result set row by row
+  while($row = mysqli_fetch_array($result)) {
+    if ($row["stop_id"] == $stop_id) {
+      return "<i class='fa-solid fa-heart'></i>";
+      exit();
+    }
+  }
+  // mysqli_close($conn);
+  return "<i class='fa-regular fa-heart'></i>";
+}
+
 // Allows parameter number of stops
-function closest_stops($arr,$conn,$num = 5) {
+function closestStops($arr,$conn,$num = 5) {
   $i = 0;
   $closest_stops = array();
   foreach ($arr as $key => $value) {
@@ -147,11 +144,12 @@ function closest_stops($arr,$conn,$num = 5) {
 
   echo $header;
 
-
-  for ($i=0;$i<($num);$i++) {
+  // Loops through each closest bus stop ID
+  for ($i=0; $i<($num); $i++) {
     $sql = "SELECT * FROM bus_stops WHERE stop_id=".$closest_stops[$i][0];
     $result = mysqli_query($conn,$sql);
-  
+
+    // Adds database info for that stop ID to a temporary array
     while($row = mysqli_fetch_array($result)) {
       $closest_stops[$i][2] = $row["name"];
       $closest_stops[$i][3] = $row["street"];
@@ -160,17 +158,16 @@ function closest_stops($arr,$conn,$num = 5) {
       $closest_stops[$i][6] = $row["latitude"];
       $closest_stops[$i][7] = $row["atco_code"];
       $closest_stops[$i][8] = $row["indicator"];
-
     }
-
     $row = "";
 
+    // Displays a row of bus info for the stop ID
     $row .= "<tr>";
     $row .= "<td>".($i+1)."</td>";
     $row .= "<td><a href='backend/bus-page-redirect.php?id=".$closest_stops[$i][0]."'>".$closest_stops[$i][2]." (".$closest_stops[$i][8].")</a></td>";
     $row .= "<td>".$closest_stops[$i][3]."</td>";
     $row .= "<td>".formatDist($closest_stops[$i][1])."</td>";
-    $row .= "<td><i id='heart' class='fa-regular fa-heart'></i></td>";
+    $row .= "<td><a href='backend/save-stop.php?id=".$closest_stops[$i][0]."'>".displayHeart($closest_stops[$i][0],$conn)."</a></td>";
     $row .= "</tr>";
 
     echo $row;
@@ -179,64 +176,73 @@ function closest_stops($arr,$conn,$num = 5) {
   
 
 
+  $api_key = "AIzaSyAH1phNZY7PT6Wt9UhIWqi76NSQz0rSFWU"; 
 
-  $apiKey = 'AIzaSyAH1phNZY7PT6Wt9UhIWqi76NSQz0rSFWU'; // Replace with your Google Maps API key
   $markers = '';
-  $markers .= '&markers=color:blue%7C'.$_COOKIE["latitude"].','.$_COOKIE["longitude"];
+  // Gives marker for user entered postcode in a blue colour. Uses markers parameter
+  $markers .= "&markers=color:blue%7C".$_COOKIE["latitude"].",".$_COOKIE["longitude"];
 
-  for ($i=0;$i<$num;$i++) {
-    $markers .= '&markers=color:red%7Clabel:'.($i+1).'%7C'.$closest_stops[$i][6].','.$closest_stops[$i][5];
+  // Adds each closest stops coordinate position to the marker parameter
+  for ($i=0; $i<$num; $i++) {
+    $markers .= "&markers=color:red%7Clabel:".($i+1)."%7C".$closest_stops[$i][6].",".$closest_stops[$i][5];
   }
 
-  $url = 'https://maps.googleapis.com/maps/api/staticmap?key='.$apiKey.'&size=600x400&maptype=roadmap'.$markers;
-  echo "<img id='map' src='".$url."'>";
+  // Generates URL for image and displays image
+  $url = "https://maps.googleapis.com/maps/api/staticmap?key=$api_key&size=600x400&maptype=roadmap$markers";
 
+  echo "<img id='map' src='$url'>";
 
 }
 
-
-// $i = 0;
-// $closest_stops = array();
-// foreach ($bus_stops_arr as $key => $value) {
-//   if ($i == 5) {
-//     break;
-//   }
-//   $closest_stops[$i][0] = $key;
-//   $closest_stops[$i][1] = $value;
-//   $i++;
-// }
-
-// $sql = "SELECT * FROM bus_stops WHERE stop_id=";
-// $sql .= $closest_stops[0][0];
-// $sql .= " OR stop_id=";
-// $sql .= $closest_stops[1][0];
-
-// $result = mysqli_query($conn,$sql);
-
-
-// while($row = mysqli_fetch_array($result)) {
-//   echo "Stop Name: ".$row["name"]."</br>";
-//   echo "Street: ".$row["street"]."</br>";
-//   echo "Town: ".$row["town"]."</br>";
-//   echo "Distance: ".$closest_dist_formatted." km.</br>";
-// }
-// print_r($closest_stops);
-mysqli_close($conn);
-
-
-// Create map
-
-// function generateStaticMapURL() {
-//   $apiKey = 'AIzaSyAH1phNZY7PT6Wt9UhIWqi76NSQz0rSFWU'; // Replace with your Google Maps API key
-//   $markers = '';
-//   $markers .= '&markers=color:blue%7C'.$_COOKIE["latitude"].','.$_COOKIE["longitude"];
+function closest_Stops($arr,$conn,$num = 5) {
+  $i = 0;
+  $closest_stops = array();
+ 
+ 
+  // Loops through each key pair and stores in a temporary array until max num has been reached
+  foreach ($arr as $key => $value) {
+    if ($i == $num) {
+      break;
+    }
+    $closest_stops[$i][0] = $key;
+    $closest_stops[$i][1] = $value;
+    $i++;
+  }
+  // Selects all data for all closest bus stops found
+  $sql = "SELECT * FROM bus_stops WHERE stop_id=";
+  for ($i=0;$i<($num-1);$i++) {
+    $sql .= $closest_stops[$i][0];
+    $sql .= " OR stop_id=";
+  }
+  $sql .= $closest_stops[$num-1][0];
+  $result = mysqli_query($conn,$sql);
+  // Stores each bus stop's data next to their bus stop ID in the array
+  $i = 0;
+  while($row = mysqli_fetch_array($result)) {
   
-//   $url = 'https://maps.googleapis.com/maps/api/staticmap?key='.$apiKey.'&size=600x400&maptype=roadmap'.$markers;
-//   return $url;
-// }
+    $closest_stops[$i][2] = $row["name"];
+    $closest_stops[$i][3] = $row["street"];
+    $closest_stops[$i][4] = $row["town"];
+    $closest_stops[$i][5] = $row["longitude"];
+    $closest_stops[$i][6] = $row["latitude"];
+    $closest_stops[$i][6] = $row["atco_code"];
+ 
+ 
+    $i++;
+  }
+  echo "<table>";
+  echo "<tr><th>Number</th><th>Name</th><th>Street</th><th>Distance</th></tr>";
+  // Displays data in a table
+  for ($i=0;$i<$num;$i++) {
+    echo "<tr><td>".($i+1)."</td><td>".$closest_stops[$i][2]."</td><td>".$closest_stops[$i][0]."</td><td>".formatDist($closest_stops[$i][1])."</td></tr>";
+  }
+  echo "</table>";
+ }
+ 
 
-// $mapURL = generateStaticMapURL();
-// echo "<img src='".$mapURL."'>";
+
+mysqli_close($conn);
 
 include_once 'footer.php'
 ?>
+
