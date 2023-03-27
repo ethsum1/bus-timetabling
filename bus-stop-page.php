@@ -1,6 +1,8 @@
 <?php
     include_once 'header.php';
 
+    echo "<section class='page-content'>";
+
     echo "<button class='btn btn-secondary my-2' onclick='backBtn();'>Go back</button>";
 
     if(isset($_COOKIE["stop_id"])){
@@ -17,10 +19,14 @@
             $street = $row["street"];
             $town = $row["town"];
             $indicator = $row["indicator"];
+            $longitude = $row["longitude"];
+            $latitude = $row["latitude"];
         }
 
         echo "<h1>$name ($indicator)</h1>";
         echo "<p>$street, $town</p>";
+
+        echo "<button class='btn btn-primary my-2 btn-lft'><a href='maps://?daddr=$latitude,$longitude'>Open this bus stop in your maps app</a></button>";
 
 
         // Defines enpoint and user/pwd data for API
@@ -53,7 +59,7 @@
             return $xml->asXML();
         }
 
-        $xmlstr = createXMLRequest($naptan_code);
+        $xmlstr = createXMLRequest($atco_code);
 
         // Uses cURL library to set options for POST request
         $curl = curl_init();
@@ -110,5 +116,7 @@
         
 
     }
+
+    echo "</section>";
 
 ?>
